@@ -2,3 +2,10 @@ venv/
 pycache/
 *.pyc
 .env
+instance/notifications.db
+instance/notifications.db
+__pycache__/
+*.pyc
+venv/
+.env
+.DS_Store

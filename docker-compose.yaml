@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  notification-db:
+    image: postgres:15
+    container_name: notification-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notificationdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notification-service
+    image: notification-service:latest
+    depends_on:
+      - notification-db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@notification-db:5432/notificationdb
+      FLASK_ENV: development
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+    command: ["./wait-for-db.sh", "notification-db", "python", "run.py"]
+
+volumes:
+  postgres_data:
+

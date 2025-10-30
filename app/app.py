@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Api, Resource, fields, Namespace
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
 
 db = SQLAlchemy()
 
@@ -16,7 +17,7 @@ def create_app():
         prefix="/v1")
     
     # DB setup
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notifications.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@notification-db:5432/notificationdb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 

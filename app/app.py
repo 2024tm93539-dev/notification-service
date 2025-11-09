@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_restx import Api
 import os
+from prometheus_flask_exporter import PrometheusMetrics
 
 db = SQLAlchemy()
 mail = Mail()
@@ -15,6 +16,11 @@ api = Api(
 
 def create_app():
     app = Flask(__name__)
+    
+
+    # ✅ Prometheus metrics setup
+    metrics = PrometheusMetrics(app, path="/metrics")
+    metrics.info('notification_service_info', 'Notification Service Metrics', version='1.0.0')
 
     # =========================
     # Database Configuration
@@ -39,6 +45,7 @@ def create_app():
     db.init_app(app)
     mail.init_app(app)
     api.init_app(app)
+
 
     # Import namespaces (must come after api is initialized)
     from app.routes import ns as notification_ns
